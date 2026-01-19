@@ -3,6 +3,8 @@ import jwt from 'jsonwebtoken'
 import { supabaseAdmin } from '@/lib/supabase'
 import bcrypt from 'bcryptjs'
 
+export const dynamic = 'force-dynamic'
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
@@ -103,28 +105,32 @@ export async function POST(request: NextRequest) {
       }
 
       // 2. 验证密码
-      // 兼容 password 和 password_hash 字段
-      const dbPassword = admin.password || admin.password_hash
+      // 兼容多种可能的密码字段名
+      const dbPassword = admin.password || admin.password_hash || admin.pwd || admin.password_str
 
-      // 调试日志：打印获取到的管理员字段（注意脱敏）
-      console.log('Login attempt:', { 
-        email, 
-        foundAdmin: !!admin, 
-        hasPassword: !!admin.password, 
-        hasPasswordHash: !!admin.password_hash,
-        adminKeys: admin ? Object.keys(admin) : [] 
+      // 调试日志：打印详细的字段信息（用于 Vercel 后台排查）
+      console.log('Admin login attempt details:', { 
+        inputEmail: email, 
+        dbEmail: admin.email,
+        adminId: admin.id,
+        hasDbPassword: !!dbPassword,
+        availableKeys: Object.keys(admin),
+        status: admin.status
       })
 
       if (!dbPassword) {
-         console.error('登录失败: 用户没有设置密码字段', { email })
+         console.error('Login failed: No password field found in database record', { email })
          return NextResponse.json(
-          { error: '账号或密码错误' }, 
+          { error: '账号配置错误：未找到密码字段' }, 
           { status: 401 }
         )
       }
 
+      // 验证 BCrypt 哈希
       const isPasswordValid = await bcrypt.compare(password, dbPassword)
       
+      console.log('Password validation result:', { isPasswordValid })
+
       if (!isPasswordValid) {
         return NextResponse.json(
           { error: '账号或密码错误' }, 

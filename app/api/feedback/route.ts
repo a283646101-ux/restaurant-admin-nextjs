@@ -4,6 +4,8 @@ import { requireAuth } from '@/lib/auth'
 import { successResponse, errorResponse } from '@/lib/utils'
 import { z } from 'zod'
 
+export const dynamic = 'force-dynamic'
+
 const createFeedbackSchema = z.object({
   type: z.enum(['suggestion', 'complaint', 'praise', 'other']),
   content: z.string().min(1).max(1000),

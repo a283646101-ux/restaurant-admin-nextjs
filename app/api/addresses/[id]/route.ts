@@ -4,6 +4,8 @@ import { requireAuth } from '@/lib/auth'
 import { successResponse, errorResponse } from '@/lib/utils'
 import { z } from 'zod'
 
+export const dynamic = 'force-dynamic'
+
 const updateAddressSchema = z.object({
   name: z.string().min(1).optional(),
   phone: z.string().min(11).optional(),

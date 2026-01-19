@@ -4,6 +4,8 @@ import { requireAuth } from '@/lib/auth'
 import { successResponse, errorResponse } from '@/lib/utils'
 import { z } from 'zod'
 
+export const dynamic = 'force-dynamic'
+
 // GET - 获取地址列表
 export async function GET(request: NextRequest) {
   try {

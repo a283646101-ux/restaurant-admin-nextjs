@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 import { successResponse, errorResponse } from '@/lib/utils'
 
+export const dynamic = 'force-dynamic'
+
 // GET - 获取拼团活动列表
 export async function GET(request: NextRequest) {
   try {

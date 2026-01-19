@@ -4,6 +4,8 @@ import { requireAuth } from '@/lib/auth'
 import { successResponse, errorResponse } from '@/lib/utils'
 import { z } from 'zod'
 
+export const dynamic = 'force-dynamic'
+
 const createReviewSchema = z.object({
   dishId: z.string().uuid(),
   rating: z.number().min(1).max(5),

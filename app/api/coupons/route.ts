@@ -3,6 +3,8 @@ import { supabaseAdmin } from '@/lib/supabase'
 import { requireAuth } from '@/lib/auth'
 import { successResponse, errorResponse } from '@/lib/utils'
 
+export const dynamic = 'force-dynamic'
+
 // GET - 获取用户优惠券
 export async function GET(request: NextRequest) {
   try {
