@@ -103,16 +103,27 @@ export async function POST(request: NextRequest) {
       }
 
       // 2. 验证密码
-      // 确保 admin 对象存在且有 password 字段
-      if (!admin || !admin.password) {
-         console.error('登录失败: 未找到用户或用户没有设置密码', { email })
+      // 兼容 password 和 password_hash 字段
+      const dbPassword = admin.password || admin.password_hash
+
+      // 调试日志：打印获取到的管理员字段（注意脱敏）
+      console.log('Login attempt:', { 
+        email, 
+        foundAdmin: !!admin, 
+        hasPassword: !!admin.password, 
+        hasPasswordHash: !!admin.password_hash,
+        adminKeys: admin ? Object.keys(admin) : [] 
+      })
+
+      if (!dbPassword) {
+         console.error('登录失败: 用户没有设置密码字段', { email })
          return NextResponse.json(
           { error: '账号或密码错误' }, 
           { status: 401 }
         )
       }
 
-      const isPasswordValid = await bcrypt.compare(password, admin.password)
+      const isPasswordValid = await bcrypt.compare(password, dbPassword)
       
       if (!isPasswordValid) {
         return NextResponse.json(
@@ -134,7 +145,7 @@ export async function POST(request: NextRequest) {
           id: admin.id,
           email: admin.email,
           role: 'admin',
-          nickname: admin.nickname || '管理员'
+          nickname: admin.nickname || admin.name || '管理员'
         }
       })
     }
