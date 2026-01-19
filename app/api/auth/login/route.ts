@@ -103,6 +103,15 @@ export async function POST(request: NextRequest) {
       }
 
       // 2. 验证密码
+      // 确保 admin 对象存在且有 password 字段
+      if (!admin || !admin.password) {
+         console.error('登录失败: 未找到用户或用户没有设置密码', { email })
+         return NextResponse.json(
+          { error: '账号或密码错误' }, 
+          { status: 401 }
+        )
+      }
+
       const isPasswordValid = await bcrypt.compare(password, admin.password)
       
       if (!isPasswordValid) {
