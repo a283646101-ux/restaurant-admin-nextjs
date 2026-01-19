@@ -1,46 +1,63 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { supabaseAdmin } from '@/lib/supabase'
+import { requireAuth } from '@/lib/auth'
+import { successResponse, errorResponse } from '@/lib/utils'
+import { z } from 'zod'
 
-// GET - 获取用户列表
+// GET - 获取用户信息
 export async function GET(request: NextRequest) {
   try {
-    const searchParams = request.nextUrl.searchParams
-    const level = searchParams.get('level')
-    const page = parseInt(searchParams.get('page') || '1')
-    const limit = parseInt(searchParams.get('limit') || '20')
-    const offset = (page - 1) * limit
-
-    let query = supabase
-      .from('users')
-      .select('*', { count: 'exact' })
-
-    // 筛选条件
-    if (level) {
-      query = query.eq('level', level)
+    const authResult = requireAuth(request)
+    if (authResult instanceof NextResponse) {
+      return authResult
     }
+    const user = authResult
 
-    // 分页和排序
-    const { data, error, count } = await query
-      .order('created_at', { ascending: false })
-      .range(offset, offset + limit - 1)
+    const { data, error } = await supabaseAdmin
+      .from('users')
+      .select('*')
+      .eq('id', user.userId)
+      .single()
 
     if (error) throw error
 
-    return NextResponse.json({
-      success: true,
-      data,
-      pagination: {
-        page,
-        limit,
-        total: count || 0,
-        totalPages: Math.ceil((count || 0) / limit),
-      },
-    })
+    return successResponse(data)
   } catch (error) {
-    console.error('Get users error:', error)
-    return NextResponse.json(
-      { error: '获取用户列表失败' },
-      { status: 500 }
-    )
+    return errorResponse(error)
+  }
+}
+
+// PATCH - 更新用户信息
+const updateUserSchema = z.object({
+  nickname: z.string().optional(),
+  avatar: z.string().optional(),
+  phone: z.string().optional(),
+  birthday: z.string().optional(),
+  goal: z.enum(['lose_weight', 'gain_muscle', 'balanced']).optional(),
+})
+
+export async function PATCH(request: NextRequest) {
+  try {
+    const authResult = requireAuth(request)
+    if (authResult instanceof NextResponse) {
+      return authResult
+    }
+    const user = authResult
+
+    const body = await request.json()
+    const validatedData = updateUserSchema.parse(body)
+
+    const { data, error } = await supabaseAdmin
+      .from('users')
+      .update(validatedData)
+      .eq('id', user.userId)
+      .select()
+      .single()
+
+    if (error) throw error
+
+    return successResponse(data)
+  } catch (error) {
+    return errorResponse(error)
   }
 }
