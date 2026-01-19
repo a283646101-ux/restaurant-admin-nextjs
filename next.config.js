@@ -1,12 +1,16 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['images.unsplash.com', 'example.com', 'restaurant-admin-nextjs.oss-cn-hangzhou.aliyuncs.com'],
+    domains: ['images.unsplash.com', 'example.com', 'restaurant-admin-nextjs.oss-cn-hangzhou.aliyuncs.com', 'thirdwx.qlogo.cn'],
     remotePatterns: [
         {
             protocol: 'https',
             hostname: '**.aliyuncs.com',
         },
+        {
+            protocol: 'https',
+            hostname: 'thirdwx.qlogo.cn',
+        }
     ],
   },
   async headers() {

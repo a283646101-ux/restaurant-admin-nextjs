@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { Eye, CheckCircle, XCircle } from 'lucide-react'
 import type { Order } from '@/lib/types'
 import { format } from 'date-fns'
@@ -12,11 +12,7 @@ export default function OrdersPage() {
   const [status, setStatus] = useState('')
   const [orderMode, setOrderMode] = useState('')
 
-  useEffect(() => {
-    fetchOrders()
-  }, [status, orderMode])
-
-  const fetchOrders = async () => {
+  const fetchOrders = useCallback(async () => {
     try {
       const params = new URLSearchParams()
       if (status) params.append('status', status)
@@ -32,7 +28,11 @@ export default function OrdersPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [status, orderMode])
+
+  useEffect(() => {
+    fetchOrders()
+  }, [fetchOrders])
 
   const handleUpdateStatus = async (id: string, newStatus: string) => {
     try {

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { Search, Award } from 'lucide-react'
 import type { User } from '@/lib/types'
 import { format } from 'date-fns'
@@ -10,11 +10,7 @@ export default function UsersPage() {
   const [loading, setLoading] = useState(true)
   const [level, setLevel] = useState('')
 
-  useEffect(() => {
-    fetchUsers()
-  }, [level])
-
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     try {
       const params = new URLSearchParams()
       if (level) params.append('level', level)
@@ -29,7 +25,11 @@ export default function UsersPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [level])
+
+  useEffect(() => {
+    fetchUsers()
+  }, [fetchUsers])
 
   const levelMap: Record<string, { label: string; color: string; icon: string }> = {
     bronze: { label: '青铜会员', color: 'bg-orange-100 text-orange-700', icon: '🥉' },
@@ -101,6 +101,7 @@ export default function UsersPage() {
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-3">
                     {user.avatar ? (
+                      // eslint-disable-next-line @next/next/no-img-element
                       <img
                         src={user.avatar}
                         alt={user.nickname || '用户'}
