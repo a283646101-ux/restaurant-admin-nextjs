@@ -19,11 +19,11 @@ export function errorResponse(error: any, status: number = 500) {
     message = error
   }
 
-  // Handle Zod validation errors
-  if (error instanceof ZodError) {
-    status = 400
-    message = error.errors.map(e => `${e.path.join('.')}: ${e.message}`).join(', ')
-  }
+    // Handle Zod validation errors
+    if (error instanceof ZodError) {
+        status = 400
+        message = error.errors.map(e => `${e.path.join('.')}: ${e.message}`).join(', ')
+    }
 
   return NextResponse.json(
     {

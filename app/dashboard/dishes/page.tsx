@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { Plus, Edit, Trash2, Search, X, Upload, Minus } from 'lucide-react'
 import type { Dish, DishSpec, Nutrition } from '@/lib/types'
 
@@ -45,11 +45,7 @@ export default function DishesPage() {
   })
   const [submitting, setSubmitting] = useState(false)
 
-  useEffect(() => {
-    fetchDishes()
-  }, [category, status])
-
-  const fetchDishes = async () => {
+  const fetchDishes = useCallback(async () => {
     try {
       const params = new URLSearchParams()
       if (category) params.append('category', category)
@@ -65,7 +61,11 @@ export default function DishesPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [category, status])
+
+  useEffect(() => {
+    fetchDishes()
+  }, [fetchDishes])
 
   const handleDelete = async (id: string) => {
     if (!confirm('确定要删除这个菜品吗？')) return
@@ -302,6 +302,7 @@ export default function DishesPage() {
                   <td className="px-6 py-4">
                     <div className="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden">
                       {dish.image ? (
+                        // eslint-disable-next-line @next/next/no-img-element
                         <img 
                           src={dish.image} 
                           alt={dish.name}
@@ -486,6 +487,7 @@ export default function DishesPage() {
                   <div className="flex items-center gap-4">
                     {formData.image && (
                       <div className="w-24 h-24 rounded-lg overflow-hidden bg-gray-100 border border-gray-200">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src={formData.image} alt="Preview" className="w-full h-full object-cover" />
                       </div>
                     )}
