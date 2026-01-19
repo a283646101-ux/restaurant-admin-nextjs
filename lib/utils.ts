@@ -22,7 +22,7 @@ export function errorResponse(error: any, status: number = 500) {
     // Handle Zod validation errors
     if (error instanceof ZodError) {
         status = 400
-        message = error.errors.map(e => `${e.path.join('.')}: ${e.message}`).join(', ')
+        message = error.issues.map(e => `${e.path.join('.')}: ${e.message}`).join(', ')
     }
 
   return NextResponse.json(
