@@ -151,7 +151,7 @@ export default function OrdersPage() {
                       </span>
                       <div className="flex gap-2 mt-1">
                         <span className="px-2 py-0.5 bg-gray-100 rounded text-xs text-gray-600">
-                          {orderModeMap[order.order_mode]}
+                          {orderModeMap[order.order_mode ?? 'unknown'] ?? '未知模式'}
                         </span>
                         {order.table_number && (
                           <span className="px-2 py-0.5 bg-orange-50 text-orange-600 rounded text-xs">
