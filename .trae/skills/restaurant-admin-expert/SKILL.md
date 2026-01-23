@@ -115,6 +115,20 @@ description: "Expert guide for Restaurant Admin System (Next.js 14 + Supabase). 
 
 ## Specialized Modules (Trigger with Hashtags)
 
+### #RESTAURANT_ADMIN_SYSTEM
+**Description:** 餐饮后台管理系统核心总纲。包含设计哲学、数据同步原则、权限模型与技术架构。这是本 Skill 的基础，默认对所有任务生效。
+
+**餐饮后台管理系统核心心智模型**
+这不是一个普通的管理面板，而是**餐厅运营大脑**。最高原则：**极致运营效率、数据绝对可靠、操作零风险、小程序实时联动**。
+
+**核心原则速查：**
+- **设计哲学**：服务于忙碌店长，一键决策，数据 Supabase 单源真理。
+- **小程序联动**：菜品/订单 3秒内实时同步，版本防冲突。
+- **权限控制**：后台(admin)与小程序(customer)严格隔离，RLS 必开。
+- **技术架构**：Next.js 14 App Router + Supabase + Tailwind + TypeScript。
+- **关键业务**：菜品多规格库存管理、订单严谨状态机、会员等级自动计算。
+- **自我检查**：操作是否 < 10秒？小程序是否同步？接口失败是否有 Mock？
+
 ### #ADMIN_UI_UX
 **Description:** 当任务涉及后台管理系统 UI/UX 设计、页面布局、表格交互、表单优化或运营效率时，加载本 Skill。专为餐饮后台（非用户端）优化。
 
