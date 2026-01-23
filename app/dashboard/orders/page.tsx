@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
-import { Eye, CheckCircle, XCircle, Utensils, Clock, ArrowRight, Loader2 } from 'lucide-react'
+import { Eye, CheckCircle, Utensils, Clock, Users, Loader2 } from 'lucide-react'
 import type { Order } from '@/lib/types'
 import { format } from 'date-fns'
 import { supabase } from '@/lib/supabase'

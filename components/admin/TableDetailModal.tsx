@@ -23,9 +23,26 @@ export function TableDetailModal({ table, isOpen, onClose, onUpdate }: TableDeta
   // Fetch dishes for "Add Dish" tab
   useEffect(() => {
     if (isOpen && activeTab === 'add_dish' && dishes.length === 0) {
-      fetchDishes()
+      // Internal function to fetch dishes
+      const loadDishes = async () => {
+        setLoading(true)
+        try {
+          const params = new URLSearchParams()
+          params.append('status', 'on_sale')
+          if (category) params.append('category', category)
+          
+          const res = await fetch(`/api/dishes?${params}`)
+          const json = await res.json()
+          if (json.success) setDishes(json.data)
+        } catch (err) {
+          console.error(err)
+        } finally {
+          setLoading(false)
+        }
+      }
+      loadDishes()
     }
-  }, [isOpen, activeTab])
+  }, [isOpen, activeTab, category, dishes.length]) // Added dependencies
 
   // Reset selected dishes when modal opens/closes
   useEffect(() => {
@@ -35,22 +52,8 @@ export function TableDetailModal({ table, isOpen, onClose, onUpdate }: TableDeta
     }
   }, [isOpen])
 
-  const fetchDishes = async () => {
-    setLoading(true)
-    try {
-      const params = new URLSearchParams()
-      params.append('status', 'on_sale')
-      if (category) params.append('category', category)
-      
-      const res = await fetch(`/api/dishes?${params}`)
-      const json = await res.json()
-      if (json.success) setDishes(json.data)
-    } catch (err) {
-      console.error(err)
-    } finally {
-      setLoading(false)
-    }
-  }
+      // Remove fetchDishes since it's now inside useEffect
+  // const fetchDishes = async () => { ... }
 
   const handleSelectDish = (dish: Dish) => {
     setSelectedDishes(prev => {
