@@ -54,7 +54,7 @@ export default function OrdersPage() {
   const handleUpdateStatus = async (id: string, newStatus: string) => {
     try {
       // Optimistic update
-      setOrders(prev => prev.map(o => o.id === id ? { ...o, status: newStatus } : o))
+      setOrders(prev => prev.map(o => o.id === id ? { ...o, status: newStatus } as Order : o))
 
       const response = await fetch(`/api/orders/${id}`, {
         method: 'PUT',
