@@ -139,9 +139,18 @@ export async function POST(request: NextRequest) {
       }
 
       // 3. 生成 JWT token
+      // 确保 process.env.JWT_SECRET 存在
+      if (!process.env.JWT_SECRET) {
+        console.error('JWT_SECRET not configured')
+        return NextResponse.json(
+          { error: '服务器配置错误：JWT_SECRET 未设置' },
+          { status: 500 }
+        )
+      }
+
       const token = jwt.sign(
         { userId: admin.id, email: admin.email, role: 'admin' },
-        process.env.JWT_SECRET!,
+        process.env.JWT_SECRET,
         { expiresIn: '1d' }
       )
 
