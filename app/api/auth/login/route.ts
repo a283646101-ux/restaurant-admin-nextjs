@@ -148,6 +148,13 @@ export async function POST(request: NextRequest) {
         )
       }
 
+      // 添加调试日志
+      console.log('Generating JWT token...', { 
+        userId: admin.id, 
+        email: admin.email,
+        jwtSecretLength: process.env.JWT_SECRET.length 
+      })
+
       const token = jwt.sign(
         { userId: admin.id, email: admin.email, role: 'admin' },
         process.env.JWT_SECRET,
