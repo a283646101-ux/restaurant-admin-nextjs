@@ -64,7 +64,7 @@ export interface Order {
   order_type?: 'delivery' | 'pickup'
   order_mode?: 'dine_in' | 'delivery'
   table_number?: string
-  status: 'pending' | 'paid' | 'completed' | 'cancelled'
+  status: 'pending' | 'paid' | 'preparing' | 'completed' | 'cancelled'
   address?: Address
   queue_number?: number
   coupon_id?: string
